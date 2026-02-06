@@ -28,24 +28,14 @@ rand3_counts = rand3.iloc[:, 3].value_counts()
 # Combine random counts into a DataFrame
 rand_counts_df = pd.DataFrame([rand1_counts, rand2_counts, rand3_counts]).fillna(0)
 
-# Calculate the average count for each unique value across the three random sets
-rand_avg_counts = rand_counts_df.mean(axis=0)
-rand_stnd_dev_counts = rand_counts_df.std(axis=0)
+# Calculate fold enrichment per random sample (original_counts / random_counts)
+# rand_counts_df has rows = samples and columns = features
+fold_per_sample = rand_counts_df.apply(lambda row: original_counts / row, axis=1)
 
-# Calculate fold enrichment: original_counts divided by average random counts
-fold_enrichment = original_counts / rand_avg_counts
-print(rand_avg_counts)
-print("-----------------")
-print(original_counts)
-print("-----------------")
-print(rand1_counts)
-print(rand2_counts)
-print(rand3_counts)
-print("-----------------")
-
-fold_enrichment = fold_enrichment.reset_index()
-fold_enrichment.columns = ['feature', 'Fold_Enrichment', 'Std_Dev']
-fold_enrichment['Std_Dev'] = rand_stnd_dev_counts.loc[fold_enrichment['feature']].values
+# Calculate mean and std dev of fold enrichment across random samples for each feature
+fold_enrichment = pd.DataFrame(index=original_counts.index)
+fold_enrichment['Mean'] = fold_per_sample.mean(axis=0)
+fold_enrichment['Std_Dev'] = fold_per_sample.std(axis=0)
 
 # Print and save results
 print("Fold enrichment:")
