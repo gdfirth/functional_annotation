@@ -1,0 +1,15 @@
+.DS_Store
+**/.DS_Store
+.nextflow
+.nextflow.log*
+results/
+work/
+pangenome_reference/
+.ropeproject
+slurm-nextflow.*
+prep_query/
+tarballs/
+save-cache.txt
+input/
+examples/
+*.docx

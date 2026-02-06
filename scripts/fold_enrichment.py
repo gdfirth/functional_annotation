@@ -30,6 +30,7 @@ rand_counts_df = pd.DataFrame([rand1_counts, rand2_counts, rand3_counts]).fillna
 
 # Calculate the average count for each unique value across the three random sets
 rand_avg_counts = rand_counts_df.mean(axis=0)
+rand_stnd_dev_counts = rand_counts_df.std(axis=0)
 
 # Calculate fold enrichment: original_counts divided by average random counts
 fold_enrichment = original_counts / rand_avg_counts
@@ -42,8 +43,12 @@ print(rand2_counts)
 print(rand3_counts)
 print("-----------------")
 
+fold_enrichment = fold_enrichment.reset_index()
+fold_enrichment.columns = ['feature', 'Fold_Enrichment', 'Std_Dev']
+fold_enrichment['Std_Dev'] = rand_stnd_dev_counts.loc[fold_enrichment['feature']].values
+
 # Print and save results
 print("Fold enrichment:")
 print(fold_enrichment)
 
-fold_enrichment.to_csv("fold_enrichment_results.txt", sep='\t', header=False)
+fold_enrichment.to_csv("fold_enrichment_results.txt", sep='\t', header=True)
