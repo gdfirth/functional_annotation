@@ -25,6 +25,16 @@ rand1_counts = rand1.iloc[:, 3].value_counts()
 rand2_counts = rand2.iloc[:, 3].value_counts()
 rand3_counts = rand3.iloc[:, 3].value_counts()
 
+print(type(original_counts))
+print(original_counts)
+print("-"*20)
+for df in [original_counts, rand1_counts, rand2_counts, rand3_counts]:
+    df.loc['TSS'] = df.loc['sTSS'] + df.loc['dTSS']
+    df.loc['TTS'] = df.loc['sTTS'] + df.loc['cTTS']
+    df.drop(['sTSS', 'dTSS', 'sTTS', 'cTTS'], inplace=True)
+
+print(original_counts)
+
 # Combine random counts into a DataFrame
 rand_counts_df = pd.DataFrame([rand1_counts, rand2_counts, rand3_counts]).fillna(0)
 
